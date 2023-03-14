@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Ejemplo de Firebase Realtime Database</title>
+  </head>
+  <body>
+    <h1>Ejemplo de Firebase Realtime Database</h1>
+    <ol id="usuarios"></ol>
+
+    <!-- Importa Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-database.js"></script>
+    <script>
+      // Configura las credenciales y la URL de la base de datos
+      const firebaseConfig = {
+        apiKey: "YOUR_APIKEY",
+        authDomain: "YOUR_AUTH_DOMAIN",
+        databaseURL: "YOUR_DATABASE_URL",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_STIRAGE_BUCKET",
+        messagingSenderId: "YOUR_MESSAGE_SENDER_ID",
+        appId: "YOUR_API_ID",
+        measurementId: "YOUR_MEASUREMENT_ID"
+      };
+
+      // Inicializa Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      // Obtiene una instancia de la base de datos
+      const database = firebase.database();
+
+      // Suscribe a cambios en la ubicación "usuarios"
+      database.ref('usuarios').orderByChild('edad').startAt(40).on('value', function(snapshot) {
+        const usuarios = snapshot.val();
+
+        console.log(usuarios)
+
+        // Limpia la lista de usuarios
+        const listaUsuarios = document.getElementById('usuarios');
+        listaUsuarios.innerHTML = '';
+
+        // Agrega cada usuario a la lista
+        for (const id in usuarios) {
+
+          const usuario = usuarios[id];
+          const li = document.createElement('li');
+          li.textContent = `${usuario.nombre} (${usuario.edad})`;
+          listaUsuarios.appendChild(li);
+        }
+      });
+    </script>
+  </body>
+</html>
